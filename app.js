@@ -18,10 +18,12 @@ app.get('/', (req, res) => {
 
 //search button
 app.get('/search', (req, res) => {
-  const restaurants = restaurantList.results.filter((restaurants) => {
-    return restaurants.name.toLowerCase().includes(req.query.keyword.toLowerCase())
-  })
-  res.render('index', { restaurant: restaurants, keyword: req.query.keyword })
+  // const restaurants = restaurantList.results.filter((restaurants) => {
+  //   return restaurants.name.toLowerCase().includes(req.query.keyword.toLowerCase() ）|| restaurants.category.toLowerCase().includes(req.query.keyword.toLowerCase()))
+  // })
+  const keyword = req.query.keyword
+  const restaurants = restaurantList.results.filter(restaurant => restaurant.name.toLowerCase().includes(keyword.toLowerCase()) || restaurant.category.toLowerCase().includes(keyword.toLowerCase()))
+  res.render('index', { restaurant: restaurants, keyword: keyword })
 })
 
 //show detail page
