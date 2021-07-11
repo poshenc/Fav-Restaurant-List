@@ -29,7 +29,7 @@ app.use(express.static('public'))
 
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// 取出 Restaurant model 裡的所有資料
+// 首頁之routing
 app.get('/', (req, res) => {
   Restaurant.find()
     .lean()
@@ -37,10 +37,12 @@ app.get('/', (req, res) => {
     .catch(error => console.log(error))
 })
 
+//新增餐廳之routing
 app.get('/restaurants/new', (req, res) => {
   return res.render('new')
 })
-//詳細資料routing
+
+//詳細資料之routing
 app.get('/restaurants/:id', (req, res) => {
   const id = req.params.id
   return Restaurant.findById(req.params.id)
@@ -49,7 +51,7 @@ app.get('/restaurants/:id', (req, res) => {
     .catch(error => console.log(error))
 })
 
-//edit資料routing
+//edit資料之routing
 app.get('/restaurants/:id/edit', (req, res) => {
   const id = req.params.id
   return Restaurant.findById(req.params.id)
@@ -110,26 +112,43 @@ app.post('/restaurants/:id/delete', (req, res) => {
     .catch(error => console.log(error))
 })
 
-// //routes setting
-// app.get('/', (req, res) => {
-//   res.render('index', { restaurant: restaurantList.results })
-// })
-
-//search button
+//search function
 app.get('/search', (req, res) => {
-  const keyword = req.query.keyword
-  const restaurants = restaurantList.results.filter(restaurant => restaurant.name.toLowerCase().includes(keyword.toLowerCase()) || restaurant.category.toLowerCase().includes(keyword.toLowerCase()))
-  res.render('index', { restaurant: restaurants, keyword: keyword })
-})
-
-//show detail page
-app.get('/restaurants/:restaurant_id', (req, res) => {
-  const restaurant = restaurantList.results.filter(function (res) {
-    return res.id === Number(req.params.restaurant_id)
-  })
-  res.render('show', { restaurant: restaurant[0] })
+  const keyword = req.query.keyword.toLowerCase()
+  Restaurant.find()
+    .lean()
+    .then((restaurants) => {
+      restaurants = restaurants.filter((restaurant) =>
+        restaurant.name.toLowerCase().includes(keyword) || restaurant.category.toLowerCase().includes(keyword)
+      )
+      res.render('index', { restaurants: restaurants, keyword: keyword })
+    })
 })
 
 app.listen(port, () => {
   console.log(`listing on localhost:${port}`)
 })
+
+
+
+// (舊code，可刪)
+
+// //routes setting (舊code，可刪)
+// app.get('/', (req, res) => {
+//   res.render('index', { restaurant: restaurantList.results })
+// })
+
+// //search button (舊code，可刪)
+// app.get('/search', (req, res) => {
+//   const keyword = req.query.keyword
+//   const restaurants = restaurantList.results.filter(restaurant => restaurant.name.toLowerCase().includes(keyword.toLowerCase()) || restaurant.category.toLowerCase().includes(keyword.toLowerCase()))
+//   res.render('index', { restaurants: restaurants, keyword: keyword })
+// })
+
+// //show detail page (舊code，可刪)
+// app.get('/restaurants/:restaurant_id', (req, res) => {
+//   const restaurant = restaurantList.results.filter(function (res) {
+//     return res.id === Number(req.params.restaurant_id)
+//   })
+//   res.render('show', { restaurant: restaurant[0] })
+// })
