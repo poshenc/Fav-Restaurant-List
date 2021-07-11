@@ -37,5 +37,16 @@
       <img class="rounded mx-auto d-block mb-4 w-100" src="{{restaurants.image}}" alt="{{restaurants.name}}"
         style="max-width: 600px;">
     </div>
+
+    <!-- Buttons -->
+    <div class="button mb-5 d-flex justify-content-center">
+      <u class="mt-1 mr-3">
+        <a href="/restaurants/{{restaurants._id}}/edit">Edit</a>
+      </u>
+      <form action="/restaurants/{{restaurants._id}}/delete" method="POST">
+        <button type="submit" class="btn btn-danger ml-2">Delete</button>
+      </form>
+    </div>
+
   </div>
 </div>
