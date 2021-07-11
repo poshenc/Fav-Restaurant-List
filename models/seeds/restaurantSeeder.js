@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Restaurant = require('../restaurant')
-const rawList = require('../../restaurant.json')
-const seed = rawList.results
+const originalList = require('../../restaurant.json')
+const seed = originalList.results
 
 mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true, useUnifiedTopology: true })
 

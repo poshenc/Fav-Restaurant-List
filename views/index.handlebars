@@ -45,12 +45,12 @@
 
           <!-- Create buttons -->
           <div class="button mb-5 d-flex justify-content-end">
-            <u class="mt-1 mr-3">
-              <a href="/restaurants/{{this._id}}/edit">Edit</a>
-            </u>
-            <u class="mt-1 mr-3">
-              <a href="/restaurants/{{this._id}}">Detail</a>
-            </u>
+            <form action="/restaurants/{{this._id}}/edit">
+              <button type="submit" class="btn btn-primary ml-2">Edit</button>
+            </form>
+            <form action="/restaurants/{{this._id}}">
+              <button type="submit" class="btn btn-primary ml-2">Detail</button>
+            </form>
             <form action="/restaurants/{{this._id}}/delete" method="POST">
               <button type="submit" class="btn btn-danger ml-2">Delete</button>
             </form>

@@ -101,6 +101,15 @@ app.post('/restaurants/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
+//使用者delete餐廳，修改資料庫資料
+app.post('/restaurants/:id/delete', (req, res) => {
+  const id = req.params.id
+  return Restaurant.findById(id)
+    .then(restaurants => restaurants.remove())
+    .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
+})
+
 // //routes setting
 // app.get('/', (req, res) => {
 //   res.render('index', { restaurant: restaurantList.results })
