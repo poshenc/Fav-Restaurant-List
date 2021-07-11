@@ -4,6 +4,8 @@ const exphbs = require('express-handlebars')
 const mongoose = require('mongoose')
 const restaurantList = require('./restaurant.json')
 const port = 3000
+const Restaurant = require('./models/restaurant.js')
+const bodyParser = require('body-parser')
 
 mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -25,16 +27,42 @@ app.set('view engine', 'handlebars')
 //setting static files
 app.use(express.static('public'))
 
-//routes setting
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// 取出 Restaurant model 裡的所有資料
 app.get('/', (req, res) => {
-  res.render('index', { restaurant: restaurantList.results })
+  Restaurant.find()
+    .lean()
+    .then(restaurants => res.render('index', { restaurants }))
+    .catch(error => console.log(error))
 })
+
+app.get('/restaurants/new', (req, res) => {
+  return res.render('new')
+})
+
+//使用者填寫新餐廳，新增資料庫資料
+app.post('/restaurants', (req, res) => {
+  const name = req.body.name
+  const category = req.body.category
+  const image = req.body.image
+  const location = req.body.location
+  const phone = req.body.phone
+  const google_map = req.body.google_map
+  const rating = req.body.rating
+  const description = req.body.description
+
+  return Restaurant.create({ name, category, image, location, phone, google_map, rating, description })
+    .then(() => res.redirect('/'))
+    .catch(error => console.log(error))
+})
+// //routes setting
+// app.get('/', (req, res) => {
+//   res.render('index', { restaurant: restaurantList.results })
+// })
 
 //search button
 app.get('/search', (req, res) => {
-  // const restaurants = restaurantList.results.filter((restaurants) => {
-  //   return restaurants.name.toLowerCase().includes(req.query.keyword.toLowerCase() ）|| restaurants.category.toLowerCase().includes(req.query.keyword.toLowerCase()))
-  // })
   const keyword = req.query.keyword
   const restaurants = restaurantList.results.filter(restaurant => restaurant.name.toLowerCase().includes(keyword.toLowerCase()) || restaurant.category.toLowerCase().includes(keyword.toLowerCase()))
   res.render('index', { restaurant: restaurants, keyword: keyword })

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const Restaurant = require('../restaurant')
-const raw = require('../../restaurant.json')
-const seed = raw.results
+const rawList = require('../../restaurant.json')
+const seed = rawList.results
 
 mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true, useUnifiedTopology: true })
 
@@ -17,7 +17,6 @@ db.once('open', () => {
     Restaurant.create({
       id: restaurant.id,
       name: restaurant.name,
-      name_en: restaurant.name_en,
       category: restaurant.category,
       image: restaurant.image,
       location: restaurant.location,
@@ -27,5 +26,4 @@ db.once('open', () => {
       description: restaurant.description
     })
   })
-  console.log('Seeding complete.')
 })
