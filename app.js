@@ -40,6 +40,14 @@ app.get('/', (req, res) => {
 app.get('/restaurants/new', (req, res) => {
   return res.render('new')
 })
+//詳細資料routing
+app.get('/restaurants/:id', (req, res) => {
+  const id = req.params.id
+  return Restaurant.findById(req.params.id)
+    .lean()
+    .then((restaurants) => res.render('show', { restaurants }))
+    .catch(error => console.log(error))
+})
 
 //使用者填寫新餐廳，新增資料庫資料
 app.post('/restaurants', (req, res) => {
