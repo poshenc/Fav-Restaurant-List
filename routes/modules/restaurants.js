@@ -28,7 +28,7 @@ router.get('/:id/edit', (req, res) => {
 })
 
 //使用者填寫新餐廳，新增資料庫資料
-router.post('', (req, res) => {
+router.post('/', (req, res) => {
   const name = req.body.name
   const category = req.body.category
   const image = req.body.image
@@ -79,5 +79,17 @@ router.delete('/:id', (req, res) => {
     .catch(error => console.log(error))
 })
 
+//search function
+router.get('/search', (req, res) => {
+  const keyword = req.query.keyword.toLowerCase()
+  Restaurant.find()
+    .lean()
+    .then((restaurants) => {
+      restaurants = restaurants.filter((restaurant) =>
+        restaurant.name.toLowerCase().includes(keyword) || restaurant.category.toLowerCase().includes(keyword)
+      )
+      res.render('index', { restaurants: restaurants, keyword: keyword })
+    })
+})
 
 module.exports = router
