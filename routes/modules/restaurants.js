@@ -92,7 +92,7 @@ router.delete('/:id', (req, res) => {
     .catch(error => console.log(error))
 })
 
-// //search function (本串code 放在下面就無法使用search function....)
+// //search function (本串code已移到上方，放在這邊就無法使用search function....，不太清楚為什麼？？)
 // router.get('/search', (req, res) => {
 //   const keyword = req.query.keyword.toLowerCase()
 //   Restaurant.find()
