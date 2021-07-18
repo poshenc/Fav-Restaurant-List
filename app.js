@@ -7,6 +7,8 @@ const port = 3000
 const Restaurant = require('./models/restaurant.js')
 const bodyParser = require('body-parser')
 
+const methodOverride = require('method-override')
+
 mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true, useUnifiedTopology: true })
 
 // 取得資料庫連線狀態
@@ -28,6 +30,8 @@ app.set('view engine', 'handlebars')
 app.use(express.static('public'))
 
 app.use(bodyParser.urlencoded({ extended: true }))
+
+app.use(methodOverride('_method'))
 
 // 首頁之routing
 app.get('/', (req, res) => {
@@ -76,8 +80,8 @@ app.post('/restaurants', (req, res) => {
     .catch(error => console.log(error))
 })
 
-//使用者edit餐廳，修改資料庫資料
-app.post('/restaurants/:id/edit', (req, res) => {
+//使用者edit餐廳，修改資料庫資料 (Update for RESTful APL)
+app.put('/restaurants/:id', (req, res) => {
   const id = req.params.id
   const name = req.body.name
   const category = req.body.category
@@ -103,8 +107,8 @@ app.post('/restaurants/:id/edit', (req, res) => {
     .catch(error => console.log(error))
 })
 
-//使用者delete餐廳，修改資料庫資料
-app.post('/restaurants/:id/delete', (req, res) => {
+//使用者delete餐廳，修改資料庫資料(Update for RESTful APL)
+app.delete('/restaurants/:id', (req, res) => {
   const id = req.params.id
   return Restaurant.findById(id)
     .then(restaurants => restaurants.remove())
