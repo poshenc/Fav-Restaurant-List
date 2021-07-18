@@ -3,16 +3,29 @@ const router = express.Router()
 
 const Restaurant = require('../../models/restaurant.js')
 
-
 //新增餐廳之routing
 router.get('/new', (req, res) => {
   return res.render('new')
 })
 
+//search function
+router.get('/search', (req, res) => {
+  const keyword = req.query.keyword.toLowerCase()
+  Restaurant.find()
+    .lean()
+    .then((restaurants) => {
+      restaurants = restaurants.filter((restaurant) =>
+        restaurant.name.toLowerCase().includes(keyword) || restaurant.category.toLowerCase().includes(keyword)
+      )
+      res.render('index', { restaurants: restaurants, keyword: keyword })
+    })
+    .catch((error) => console.error(error))
+})
+
 //詳細資料之routing
 router.get('/:id', (req, res) => {
   const id = req.params.id
-  return Restaurant.findById(req.params.id)
+  return Restaurant.findById(id)
     .lean()
     .then((restaurants) => res.render('show', { restaurants }))
     .catch(error => console.log(error))
@@ -79,17 +92,18 @@ router.delete('/:id', (req, res) => {
     .catch(error => console.log(error))
 })
 
-//search function
-router.get('/search', (req, res) => {
-  const keyword = req.query.keyword.toLowerCase()
-  Restaurant.find()
-    .lean()
-    .then((restaurants) => {
-      restaurants = restaurants.filter((restaurant) =>
-        restaurant.name.toLowerCase().includes(keyword) || restaurant.category.toLowerCase().includes(keyword)
-      )
-      res.render('index', { restaurants: restaurants, keyword: keyword })
-    })
-})
+// //search function (本串code 放在下面就無法使用search function....)
+// router.get('/search', (req, res) => {
+//   const keyword = req.query.keyword.toLowerCase()
+//   Restaurant.find()
+//     .lean()
+//     .then((restaurants) => {
+//       restaurants = restaurants.filter((restaurant) =>
+//         restaurant.name.toLowerCase().includes(keyword) || restaurant.category.toLowerCase().includes(keyword)
+//       )
+//       res.render('index', { restaurants: restaurants, keyword: keyword })
+//     })
+// })
 
 module.exports = router
+
