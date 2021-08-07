@@ -6,9 +6,8 @@
   "scripts": {
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "seed": "node models/seeds/restaurantSeeder.js",
-    "test": "standard && node my-tests.js"
+    "test": "standard && node my-tests.js",
+    "seed": "node models/seeds/restaurantSeeder.js"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +16,7 @@
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "express-handlebars": "^5.3.2",
+    "express-session": "^1.17.2",
     "method-override": "^3.0.0",
     "mongoose": "^5.13.2"
   }
