@@ -39,7 +39,7 @@ router.post('/register', (req, res) => {
   User.findOne({ email }).then(user => {
     // 如果已經註冊：退回原本畫面
     if (user) {
-      errors.push({ message: '該 Email 已經註冊過了。' })
+      errors.push({ message: '此 Email 已經註冊過了。' })
       res.render('register', {
         errors,
         name,
