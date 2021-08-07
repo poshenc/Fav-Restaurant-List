@@ -11,7 +11,8 @@ router.get('/new', (req, res) => {
 //search function
 router.get('/search', (req, res) => {
   const keyword = req.query.keyword.toLowerCase()
-  Restaurant.find()
+  const userId = req.user._id
+  Restaurant.find({ userId })
     .lean()
     .then((restaurants) => {
       restaurants = restaurants.filter((restaurant) =>
@@ -24,8 +25,9 @@ router.get('/search', (req, res) => {
 
 //詳細資料之routing
 router.get('/:id', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Restaurant.findOne({ _id, userId })
     .lean()
     .then((restaurants) => res.render('show', { restaurants }))
     .catch(error => console.log(error))
@@ -33,8 +35,9 @@ router.get('/:id', (req, res) => {
 
 //edit資料之routing
 router.get('/:id/edit', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(req.params.id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Restaurant.findOne({ _id, userId })
     .lean()
     .then((restaurants) => res.render('edit', { restaurants }))
     .catch(error => console.log(error))
@@ -42,6 +45,7 @@ router.get('/:id/edit', (req, res) => {
 
 //使用者填寫新餐廳，新增資料庫資料
 router.post('/', (req, res) => {
+  const userId = req.user._id
   const name = req.body.name
   const category = req.body.category
   const image = req.body.image
@@ -51,14 +55,15 @@ router.post('/', (req, res) => {
   const rating = req.body.rating
   const description = req.body.description
 
-  return Restaurant.create({ name, category, image, location, phone, google_map, rating, description })
+  return Restaurant.create({ userId, name, category, image, location, phone, google_map, rating, description })
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
 
 //使用者edit餐廳，修改資料庫資料 (Update for RESTful APL)
 router.put('/:id', (req, res) => {
-  const id = req.params.id
+  const userId = req.user._id
+  const _id = req.params.id
   const name = req.body.name
   const category = req.body.category
   const image = req.body.image
@@ -67,7 +72,7 @@ router.put('/:id', (req, res) => {
   const google_map = req.body.google_map
   const rating = req.body.rating
   const description = req.body.description
-  return Restaurant.findById(id)
+  return Restaurant.findOne({ _id, userId })
     .then(restaurants => {
       restaurants.name = name
       restaurants.category = category
@@ -79,31 +84,19 @@ router.put('/:id', (req, res) => {
       restaurants.description = description
       return restaurants.save()
     })
-    .then(() => res.redirect(`/restaurants/${id}`))
+    .then(() => res.redirect(`/restaurants/${_id}`))
     .catch(error => console.log(error))
 })
 
 //使用者delete餐廳，修改資料庫資料(Update for RESTful APL)
 router.delete('/:id', (req, res) => {
-  const id = req.params.id
-  return Restaurant.findById(id)
+  const userId = req.user._id
+  const _id = req.params.id
+  return Restaurant.findOne({ _id, userId })
     .then(restaurants => restaurants.remove())
     .then(() => res.redirect('/'))
     .catch(error => console.log(error))
 })
-
-// //search function (本串code已移到上方，放在這邊就無法使用search function....，不太清楚為什麼？？)
-// router.get('/search', (req, res) => {
-//   const keyword = req.query.keyword.toLowerCase()
-//   Restaurant.find()
-//     .lean()
-//     .then((restaurants) => {
-//       restaurants = restaurants.filter((restaurant) =>
-//         restaurant.name.toLowerCase().includes(keyword) || restaurant.category.toLowerCase().includes(keyword)
-//       )
-//       res.render('index', { restaurants: restaurants, keyword: keyword })
-//     })
-// })
 
 module.exports = router
 
