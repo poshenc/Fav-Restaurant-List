@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const methodOverride = require('method-override')
 
 const routes = require('./routes/index')
+const usePassport = require('./config/passport')
 require('./config/mongoose')
 
 const app = express()
@@ -25,7 +26,8 @@ app.use(express.static('public'))
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(methodOverride('_method'))
 
-// 使用 express.Router 獨立路由器
+usePassport(app)
+
 app.use(routes)
 
 app.listen(port, () => { console.log(`listing on localhost:${port}`) })
